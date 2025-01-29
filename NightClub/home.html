@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NightClub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: white;
+        }
+        nav {
+            position: sticky;
+            top: 0;
+            background: #111;
+            padding: 10px 0;
+            text-align: center;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .navbar a:hover {
+            color: #00ffcc;
+        }
+        section {
+            padding: 50px 20px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .event-card {
+            background: #222;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            max-width: 500px;
+        }
+        .event-card h3 {
+            color: #00ffcc;
+        }
+        .book-btn {
+            background: #00ffcc;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .book-btn:hover {
+            background: #008f99;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .modal-content {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: 15% auto;
+            text-align: center;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .modal-content input, .modal-content button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        .modal-content input {
+            background: #333;
+            color: white;
+        }
+        .modal-content button {
+            background: #00ffcc;
+            font-weight: bold;
+        }
+        .close {
+            color: white;
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .location {
+            font-size: 1.2em;
+            color: #00ffcc;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="navbar">
+            <a href="#about">About Us</a>
+            <a onclick="openEventModal()">Events</a>
+        </div>
+    </nav>
+
+    <section id="about">
+        <h1>Welcome to Bardhaman Club</h1>
+        <p>Experience the best nightlife with amazing music and drinks!</p>
+        <p>The Bardhaman Club is a social club located in Bardhaman, West Bengal, offering a space for members to socialize, enjoy food and beverages, and participate in various cultural activities, often featuring a mix of traditional Bengali cuisine and other culinary options alongside entertainment like live music and dance events. We have 4.1 ratings on google.</p>
+        <a href="https://g.co/kgs/wUQxQHE" target="_blank" style="color: #1108b3; text-decoration: none;">Read More</a>
+        <p class="location">
+            <a href="https://www.google.com/maps/search/?api=1&query=Bardhaman+Club,+6WC4+57M,+Gangpur,+West+Bengal+713103" target="_blank" style="color: #00ffcc; text-decoration: none;">
+                <div style="display: inline-block; text-align: center;">
+                    <img src="photo.jpg" alt="Location" style="width: 500px; vertical-align: middle; border: 2px solid #00ffcc; border-radius: 10px;">
+                    <div style="margin-top: 10px;">Bardhaman Club, Gangpur, West Bengal 713103</div>
+                </div></div>
+            </a>
+        </p>
+    </section>
+
+    <section id="events">
+        <h2>Upcoming Events</h2>
+        <div class="event-card">
+            <h3>DJ Night</h3>
+            <p>Join us on Saturday for an electrifying night with DJ XYZ.</p>
+            <button class="book-btn" onclick="openBookingModal('DJ Night')">Book Ticket</button>
+        </div>
+        <div class="event-card">
+            <h3>Karaoke Night</h3>
+            <p>Sing your heart out every Friday night!</p>
+            <button class="book-btn" onclick="openBookingModal('Karaoke Night')">Book Ticket</button>
+        </div>
+    </section>
+
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEventModal()">&times;</span>
+            <h2>Upcoming Events</h2>
+            <div class="event-card">
+                <h3>DJ Night</h3>
+                <p>Join us on Saturday for an electrifying night with DJ XYZ.</p>
+                <button class="book-btn" onclick="openBookingModal('DJ Night')">Book Ticket</button>
+            </div>
+            <div class="event-card">
+                <h3>Karaoke Night</h3>
+                <p>Sing your heart out every Friday night!</p>
+                <button class="book-btn" onclick="openBookingModal('Karaoke Night')">Book Ticket</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeBookingModal()">&times;</span>
+            <h2>Book Your Ticket</h2>
+            <p id="event-name"></p>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <button onclick="submitBooking()">Confirm Booking</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.navbar a[href^="#"]').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        function openEventModal() {
+            document.getElementById('eventModal').style.display = "block";
+        }
+        function closeEventModal() {
+            document.getElementById('eventModal').style.display = "none";
+        }
+        function openBookingModal(eventName) {
+            document.getElementById('event-name').textContent = "Event: " + eventName;
+            document.getElementById('bookingModal').style.display = "block";
+        }
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = "none";
+        }
+        function submitBooking() {
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            if (name && email) {
+                alert("Thank you, " + name + "! Your ticket for " + document.getElementById('event-name').textContent + " has been booked.");
+                closeBookingModal();
+            } else {
+                alert("Please fill in all fields.");
+            }
+        }
+        
+        const sections = document.querySelectorAll('section');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
